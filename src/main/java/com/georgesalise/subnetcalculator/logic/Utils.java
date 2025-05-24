@@ -1,0 +1,34 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.georgesalise.subnetcalculator.logic;
+
+import com.georgesalise.subnetcalculator.model.IPAddress;
+
+/**
+ *
+ * @author gian
+ */
+public class Utils {
+    
+    public static int calculateIncrement(int prefix) {
+        if (prefix < 8) {
+            return (int)Math.pow(2, 8 - prefix);
+        } else if (prefix < 16) {
+            return (int)Math.pow(2, 16 - prefix);
+        } else if (prefix < 24) {
+            return (int)Math.pow(2, 24 - prefix);
+        } else {
+            return (int)Math.pow(2, 32 - prefix);
+        }
+    }
+    
+    public static String print(int base){
+        String stringIP =   ((base >> 24) & 0xFF) + "." +
+                            ((base >> 16) & 0xFF) + "." +
+                            ((base >> 8) & 0xFF) + "." +
+                            (base & 0xFF);
+        return stringIP;
+    }
+}

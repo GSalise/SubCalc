@@ -1,0 +1,5 @@
+com/georgesalise/subnetcalculator/logic/Utils.class
+com/georgesalise/subnetcalculator/logic/CIDR.class
+com/georgesalise/subnetcalculator/logic/VLSM.class
+com/georgesalise/subnetcalculator/model/IPAddress.class
+com/georgesalise/subnetcalculator/SubnetCalculator.class
