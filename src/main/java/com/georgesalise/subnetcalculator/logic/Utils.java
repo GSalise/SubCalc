@@ -31,4 +31,13 @@ public class Utils {
                             (base & 0xFF);
         return stringIP;
     }
+    
+    public static Integer[] toIntegerArray(int[] values) {
+        Integer[] boxed = new Integer[values.length];
+        for (int i = 0; i < values.length; i++) {
+            boxed[i] = values[i]; 
+        }
+        return boxed;
+    }
+
 }

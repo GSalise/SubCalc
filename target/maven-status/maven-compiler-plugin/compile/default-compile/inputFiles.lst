@@ -3,3 +3,9 @@
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/logic/Utils.java
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/logic/VLSM.java
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/model/IPAddress.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/new_ui/MainFrame.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/ui/AddressSubPanel.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/ui/CIDRPanel.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/ui/MainFrame.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/ui/TopbarPanel.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/ui/VLSMPanel.java
