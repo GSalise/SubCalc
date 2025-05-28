@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,6 +54,8 @@ public class AddressSubPanel extends JPanel{
         numOfSubnetsLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
         numOfSubnets.setPreferredSize(new Dimension(200,40));
         numOfSubnets.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        numOfSubnets.setBorder(new EmptyBorder(0, 0, 0, 10));
+        
         
         this.add(addressLabel);
         this.add(address);
@@ -60,5 +63,7 @@ public class AddressSubPanel extends JPanel{
         this.add(mask);
         this.add(numOfSubnetsLabel);
         this.add(numOfSubnets);
+        // label error here
+        //this.add();
     }
 }

@@ -5,6 +5,9 @@
 package com.georgesalise.subnetcalculator.logic;
 
 import com.georgesalise.subnetcalculator.model.IPAddress;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -38,6 +41,15 @@ public class Utils {
             boxed[i] = values[i]; 
         }
         return boxed;
+    }
+    
+    public static void centerTableCells(JTable table) {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
     }
 
 }
