@@ -23,7 +23,7 @@ public class MainFrame extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         //setSize then setLocationRelativeTo so that it appears centered
-        this.setSize(1040, 1000);
+        this.setSize(1264, 1000);
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
         

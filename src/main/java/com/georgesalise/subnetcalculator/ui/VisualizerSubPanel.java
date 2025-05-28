@@ -6,6 +6,7 @@ package com.georgesalise.subnetcalculator.ui;
 
 import com.georgesalise.subnetcalculator.logic.Utils;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ public class VisualizerSubPanel extends JPanel{
     private JLabel title = new JLabel("Visualization of the Subnet");
     
     public VisualizerSubPanel(){
-        this.setBackground(Color.red);
+        this.setBackground(Color.cyan);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         title.setFont(new Font("Monospaced", Font.PLAIN, 20));
@@ -54,6 +55,7 @@ public class VisualizerSubPanel extends JPanel{
         octet.setRowHeight(30);
         octet.setGridColor(Color.black);
         octet.setEnabled(false);
+        octet.setPreferredSize(new Dimension(Integer.MAX_VALUE, 30));
         
         // bits
         Utils.centerTableCells(bits);
@@ -62,6 +64,7 @@ public class VisualizerSubPanel extends JPanel{
         bits.setRowHeight(30);
         bits.setGridColor(Color.black);
         bits.setEnabled(false);
+        bits.setPreferredSize(new Dimension(Integer.MAX_VALUE, 30));
         
         
         this.add(title);

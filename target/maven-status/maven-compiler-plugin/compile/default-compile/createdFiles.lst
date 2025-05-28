@@ -1,12 +1,14 @@
 com/georgesalise/subnetcalculator/logic/Utils.class
 com/georgesalise/subnetcalculator/ui/AddressSubPanel.class
-com/georgesalise/subnetcalculator/logic/CIDR.class
+com/georgesalise/subnetcalculator/ui/OutputSubPanel.class
 com/georgesalise/subnetcalculator/ui/TopbarPanel.class
+com/georgesalise/subnetcalculator/ui/AddressSubPanel$DigitFilter.class
+com/georgesalise/subnetcalculator/ui/CIDRPanel.class
+com/georgesalise/subnetcalculator/logic/VLSM.class
+com/georgesalise/subnetcalculator/logic/CIDR.class
 com/georgesalise/subnetcalculator/SubnetCalculator.class
 com/georgesalise/subnetcalculator/ui/VLSMPanel.class
-com/georgesalise/subnetcalculator/ui/CIDRPanel.class
 com/georgesalise/subnetcalculator/new_ui/MainFrame.class
 com/georgesalise/subnetcalculator/ui/VisualizerSubPanel.class
-com/georgesalise/subnetcalculator/logic/VLSM.class
 com/georgesalise/subnetcalculator/model/IPAddress.class
 com/georgesalise/subnetcalculator/ui/MainFrame.class

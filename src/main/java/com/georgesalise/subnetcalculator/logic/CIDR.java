@@ -26,6 +26,7 @@ public class CIDR {
         this.requestedSubnets = requestS;
         calculateRequirements(ipadd);
         this.increment = Utils.calculateIncrement(newPrefix);
+        this.calculate(ipadd);
     }
 
     public int getTotalSubnets() {

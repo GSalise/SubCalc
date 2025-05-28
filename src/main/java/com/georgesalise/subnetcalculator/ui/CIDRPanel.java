@@ -16,7 +16,6 @@ import javax.swing.JPanel;
  * @author gian
  */
 public class CIDRPanel extends JPanel{
-    JPanel b = new JPanel();
     
     public CIDRPanel(){
         this.setBackground(Color.gray);
@@ -25,15 +24,17 @@ public class CIDRPanel extends JPanel{
         
         // Address SubPanel
         AddressSubPanel addr = new AddressSubPanel();
-        addr.setPreferredSize(new Dimension(Integer.MAX_VALUE, -500));
+        addr.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        //addr.setPreferredSize(new Dimension(Integer.MAX_VALUE, -500));
         
         // Visualizer SubPanel
         VisualizerSubPanel vis = new VisualizerSubPanel();
-        //vis.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
+        //vis.setMaximumSize(new Dimension(Integer.MAX_VALUE, vis.getPreferredSize().height));
+
         
         // Output SubPanel
-        b.setPreferredSize(new Dimension(100,100));
-        b.setBackground(Color.ORANGE);
+        OutputSubPanel output = new OutputSubPanel();
+        //output.setPreferredSize(new Dimension(Integer.MAX_VALUE, 500));
         
         
         
@@ -41,7 +42,7 @@ public class CIDRPanel extends JPanel{
         
         this.add(addr);
         this.add(vis);
-        this.add(b);
+        this.add(output);
         
     }
 }
