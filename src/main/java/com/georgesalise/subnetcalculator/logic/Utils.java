@@ -5,6 +5,8 @@
 package com.georgesalise.subnetcalculator.logic;
 
 import com.georgesalise.subnetcalculator.model.IPAddress;
+import com.georgesalise.subnetcalculator.model.IPResult;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -27,7 +29,7 @@ public class Utils {
         }
     }
     
-    public static String print(int base){
+    public static String intToStringIP(int base){
         String stringIP =   ((base >> 24) & 0xFF) + "." +
                             ((base >> 16) & 0xFF) + "." +
                             ((base >> 8) & 0xFF) + "." +
@@ -50,6 +52,20 @@ public class Utils {
         for (int i = 0; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+    }
+    
+    public static Object[][] convertToTableData(ArrayList<IPResult> arrayResult){
+        Object[][] tableData = new Object[arrayResult.size()][4];
+
+        for (int i = 0; i < arrayResult.size(); i++) {
+            IPResult result = arrayResult.get(i);
+            tableData[i][0] = result.getSubnetwork() + "/" + result.getPrefix();
+            tableData[i][1] = result.getStartAddress();
+            tableData[i][2] = result.getEndAddress();
+            tableData[i][3] = result.getBroadcastAddress();
+        }
+        
+        return tableData;
     }
 
 }

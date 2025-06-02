@@ -22,21 +22,22 @@ public class CIDRPanel extends JPanel{
         this.setPreferredSize(new Dimension(100,100));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
-        // Address SubPanel
-        AddressSubPanel addr = new AddressSubPanel();
-        addr.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-        //addr.setPreferredSize(new Dimension(Integer.MAX_VALUE, -500));
-        
-        // Visualizer SubPanel
-        VisualizerSubPanel vis = new VisualizerSubPanel();
-        //vis.setMaximumSize(new Dimension(Integer.MAX_VALUE, vis.getPreferredSize().height));
-
         
         // Output SubPanel
         OutputSubPanel output = new OutputSubPanel();
         //output.setPreferredSize(new Dimension(Integer.MAX_VALUE, 500));
         
+        // Visualizer SubPanel
+        VisualizerSubPanel vis = new VisualizerSubPanel();
+        //vis.setMaximumSize(new Dimension(Integer.MAX_VALUE, vis.getPreferredSize().height));
         
+        // Address SubPanel
+        AddressSubPanel addr = new AddressSubPanel(output, vis);
+        addr.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        //addr.setPreferredSize(new Dimension(Integer.MAX_VALUE, -500));
+        
+
+
         
         
         

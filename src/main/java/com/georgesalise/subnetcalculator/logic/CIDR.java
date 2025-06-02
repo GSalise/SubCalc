@@ -5,6 +5,7 @@
 package com.georgesalise.subnetcalculator.logic;
 
 import com.georgesalise.subnetcalculator.model.IPAddress;
+import com.georgesalise.subnetcalculator.model.IPResult;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +18,7 @@ public class CIDR {
     private int requestedSubnets;
     private int increment;
     ArrayList<String> cidrList = new ArrayList<String>();
+    ArrayList<IPResult> cidrList2 = new ArrayList<IPResult>();
     
     public CIDR(){
     
@@ -59,7 +61,8 @@ public class CIDR {
 
         // Limit to 1024
         for(int i = 0; i < this.totalSubnets && i < 1024; i++){
-            this.cidrList.add(Utils.print(base));
+            this.cidrList2.add(new IPResult(base, this.newPrefix));
+            //this.cidrList.add(Utils.intToStringIP(base));
             base +=  (int)Math.pow(2, 32 - this.newPrefix);
 
         }
@@ -73,15 +76,20 @@ public class CIDR {
         int a = nth * this.increment;
         int base = ipadd.getIpAddress();
         base +=  a;
-        System.out.println(Utils.print(base) + "\n\n");
+        System.out.println(Utils.intToStringIP(base) + "\n\n");
         
         
     }
     
     public void print(){
         for(int i = 0; i < this.totalSubnets && i < 1024; i++){
-            System.out.println("Subnet " + i + ": " + this.cidrList.get(i) + "/" + this.newPrefix + "\n");
+//            System.out.println("Subnet " + i + ": " + this.cidrList.get(i) + "/" + this.newPrefix + "\n");
+            System.out.println("Subnet " + i + ": " + this.cidrList2.get(i) + "/" + this.newPrefix + "\n");
         }
+    }
+
+    public ArrayList<IPResult> getCidrList2() {
+        return cidrList2;
     }
 
 }

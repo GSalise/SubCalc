@@ -44,7 +44,7 @@ public class VLSM {
         int base = ipadd.getIpAddress();
         for(int i = 0; i < this.numOfDepartments; i++){
             this.findMaskAndIncrement(this.numOfHosts[i]);
-            this.vlsmList.add(Utils.print(base));
+            this.vlsmList.add(Utils.intToStringIP(base));
             base +=  (int)Math.pow(2, 32 - this.mask);
         }
 

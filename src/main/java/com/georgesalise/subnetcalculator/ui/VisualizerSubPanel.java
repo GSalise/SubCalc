@@ -6,6 +6,7 @@ package com.georgesalise.subnetcalculator.ui;
 
 import com.georgesalise.subnetcalculator.logic.Utils;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BoxLayout;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -70,6 +72,38 @@ public class VisualizerSubPanel extends JPanel{
         this.add(title);
         this.add(octet);
         this.add(bits);
+    }
+    
+    public void loadVisual(int upTo){
+        JTable newBits = new JTable(bitsData, bitsColumn){
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                java.awt.Component c = super.prepareRenderer(renderer, row, column);
+                if(!isCellSelected(row, column)){
+                    if(column < upTo){
+                        c.setBackground(Color.green);
+                    }else{
+                        c.setBackground(Color.WHITE);
+                    }
+                }
+                return c;
+            }
+        };
+        Utils.centerTableCells(newBits);
+        newBits.setTableHeader(null);
+        newBits.setShowGrid(true);
+        newBits.setRowHeight(30);
+        newBits.setGridColor(Color.black);
+        newBits.setEnabled(false);
+        newBits.setPreferredSize(new Dimension(Integer.MAX_VALUE, 30));
+        
+        this.remove(bits);
+        this.bits = newBits;
+        this.add(bits);
+
+        this.revalidate();
+        this.repaint();
+        
     }
     
 }

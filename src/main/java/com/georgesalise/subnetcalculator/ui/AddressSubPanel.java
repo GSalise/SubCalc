@@ -5,14 +5,17 @@
 package com.georgesalise.subnetcalculator.ui;
 
 import com.georgesalise.subnetcalculator.logic.CIDR;
+import com.georgesalise.subnetcalculator.logic.Utils;
 import static com.georgesalise.subnetcalculator.logic.Utils.toIntegerArray;
 import com.georgesalise.subnetcalculator.model.IPAddress;
+import com.georgesalise.subnetcalculator.model.IPResult;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Box;
@@ -20,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
@@ -42,8 +46,14 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     private JLabel maskLabel = new JLabel("Subnet Mask: ");
     private JLabel numOfSubnetsLabel = new JLabel("Number of Subnetworks Needed: ");
     private JButton submit = new JButton("Submit");
+    private JTable cidrTable = new JTable();
+    private OutputSubPanel output;
+    private VisualizerSubPanel visual;
+
     
-    public AddressSubPanel (){
+    public AddressSubPanel (OutputSubPanel output, VisualizerSubPanel visual){
+        this.output = output;
+        this.visual = visual;
         this.setBackground(Color.LIGHT_GRAY);
         this.setLayout(new FlowLayout(FlowLayout.CENTER));
         //this.setBorder(new EmptyBorder(20, 0, 0 ,0));
@@ -113,16 +123,21 @@ public class AddressSubPanel extends JPanel implements ActionListener{
             if(matcher.matches()){
                 IPAddress ip = new IPAddress(ipadd, subnet);
                 CIDR cidr = new CIDR(ip, subnetworksNeeded);
-                System.out.println("\n" + cidr.getNewPrefix() + " " + cidr.getTotalSubnets() + " " + cidr.getIncrement());
-                cidr.print();
+                //System.out.println("\n" + cidr.getNewPrefix() + " " + cidr.getTotalSubnets() + " " + cidr.getIncrement());
+                String[] cidrColumnNames = {"Subnetwork", "Start Address", "End Address", "Broadcast Address"};
+                cidrTable = new JTable(Utils.convertToTableData(cidr.getCidrList2()), cidrColumnNames);
+                visual.loadVisual(cidr.getNewPrefix());
+                output.loadTable(cidrTable);
             }else{
                 System.out.println("fail");
             }
         }
         
-        
-        
-        
-        
     }
+
+    public JTable getCidrTable() {
+        return cidrTable;
+    }
+    
+    
 }

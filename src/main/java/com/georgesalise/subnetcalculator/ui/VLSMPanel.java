@@ -18,7 +18,7 @@ public class VLSMPanel extends JPanel{
         this.setBackground(Color.green);
         this.setPreferredSize(new Dimension(100,100));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        AddressSubPanel addr = new AddressSubPanel();
-        this.add(addr);
+        //AddressSubPanel addr = new AddressSubPanel();
+        //this.add(addr);
     }
 }
