@@ -57,15 +57,10 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     // VLSM
     private JTextField numOfDept = new JTextField();
     private JLabel numOfDeptLabel = new JLabel("Number of Departments Needed: ");
-    private JPanel addrPanel = new JPanel();
-    private JPanel deptPanel = new JPanel();
-    private JScrollPane deptScrollPane;
-    private JButton generateHosts = new JButton("Form");
+    private JButton generateHosts = new JButton("Generate");
     private JButton submitVLSM = new JButton("Submit");
-    private ArrayList<JTextField> hostFields = new ArrayList<>();
+    private DepartmentSubPanel dept;
     private JTable vlsmTable = new JTable();
-
-
 
 
     
@@ -89,7 +84,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         // number of subnets needed
         numOfSubnetsLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        numOfSubnets.setPreferredSize(new Dimension(200,40));
+        numOfSubnets.setPreferredSize(new Dimension(150,40));
         numOfSubnets.setFont(new Font("Monospaced", Font.PLAIN, 15));
         ((AbstractDocument) numOfSubnets.getDocument()).setDocumentFilter(new DigitFilter());
         
@@ -111,17 +106,18 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         this.add(submitCIDR);
     }
     
-    public AddressSubPanel (OutputSubPanel output){
+    public AddressSubPanel (OutputSubPanel output, DepartmentSubPanel dept){
         this.output = output;
+        this.dept = dept;
         this.setBackground(Color.LIGHT_GRAY);
-        this.setLayout(new BorderLayout());
-        addrPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         //this.setBorder(new EmptyBorder(20, 0, 0 ,0));
         
         // address
         addressLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
         address.setPreferredSize(new Dimension(200,40));
         address.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        
         
         // subnet mask
         maskLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -130,41 +126,31 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         // number of subnets needed
         numOfDeptLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        numOfDept.setPreferredSize(new Dimension(200,40));
+        numOfDept.setPreferredSize(new Dimension(150,40));
         numOfDept.setFont(new Font("Monospaced", Font.PLAIN, 15));
         ((AbstractDocument) numOfDept.getDocument()).setDocumentFilter(new DigitFilter());
         
-        // submit
+        
+        // generate host
         generateHosts.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        generateHosts.setPreferredSize(new Dimension(100, 40));
+        generateHosts.setPreferredSize(new Dimension(120, 40));
         generateHosts.addActionListener(this);
         
-        addrPanel.add(addressLabel);
-        addrPanel.add(address);
-        addrPanel.add(Box.createHorizontalStrut(5));
-        addrPanel.add(maskLabel);
-        addrPanel.add(mask);
-        addrPanel.add(Box.createHorizontalStrut(5));
-        addrPanel.add(numOfDeptLabel);
-        addrPanel.add(numOfDept);
-        addrPanel.add(Box.createHorizontalStrut(5));
-        addrPanel.add(generateHosts);
-        this.add(addrPanel, BorderLayout.NORTH);
+        // sumbit
+        submitVLSM.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        submitVLSM.setPreferredSize(new Dimension(120, 40));
         
-        // Set up deptPanel and wrap it in scroll pane
-        deptPanel.setLayout(new BoxLayout(deptPanel, BoxLayout.Y_AXIS));
-        deptPanel.setBackground(Color.LIGHT_GRAY);
-        deptPanel.setAlignmentX(CENTER_ALIGNMENT);
-
-        deptScrollPane = new JScrollPane(deptPanel);
-        deptScrollPane.setPreferredSize(new Dimension(500, 300)); // adjust as needed
-        deptScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        deptScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        // Add it to the main panel
-        this.add(deptScrollPane, BorderLayout.CENTER);
-
-    
+        
+        this.add(addressLabel);
+        this.add(address);
+        this.add(Box.createHorizontalStrut(5));
+        this.add(maskLabel);
+        this.add(mask);
+        this.add(Box.createHorizontalStrut(5));
+        this.add(numOfDeptLabel);
+        this.add(numOfDept);
+        this.add(Box.createHorizontalStrut(5));
+        this.add(generateHosts);
     }
 
     private static class DigitFilter extends DocumentFilter {
@@ -193,8 +179,13 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         Pattern pattern = Pattern.compile("^((25[0-5]|2[0-4][0-9]|1?[1-9][0-9]?))(\\.(25[0-5]|2[0-4][0-9]|1?[0-9][0-9]?|0)){3}$");
         Matcher matcher = pattern.matcher(ipadd);
-                
+        
+        
+        
+        // CIDR BUTTON HANDLER
         if (e.getSource() == submitCIDR){
+            
+            
             if (matcher.matches()){
                 // Logic
                 int subnetworksNeeded = Integer.parseInt(numOfSubnets.getText());
@@ -209,76 +200,55 @@ public class AddressSubPanel extends JPanel implements ActionListener{
             }else{
                 System.out.println("failcidr");
             }
+
+            
+        }
+        // HOST GENERATE HANDLER
+        if (e.getSource() == generateHosts){
+            if(matcher.matches()){
+                System.out.println("hey");
+                int deptNeeded = Integer.parseInt(numOfDept.getText());
+                IPAddress ip = new IPAddress(ipadd, subnet);
+                this.dept.generateDeptInputs(deptNeeded);
+                
+                for (ActionListener al : submitVLSM.getActionListeners()) {
+                    submitVLSM.removeActionListener(al);
+                }
+                
+                
+                submitVLSM.addActionListener(this);
+                this.add(submitVLSM);
+            }else{
+                System.out.println("failgenerate");
+            }       
         }
         
-        if (e.getSource() == generateHosts){
-            if (matcher.matches()){
-                int deptsNeeded = Integer.parseInt(numOfDept.getText());
+        // VLSM BUTTON HANDLER
+        if (e.getSource() == submitVLSM){
+            if(matcher.matches()){
+                int deptNeeded = Integer.parseInt(numOfDept.getText());
                 IPAddress ip = new IPAddress(ipadd, subnet);
-                generateDepartmentPanel(deptsNeeded);
+                
+                int[] hosts = new int[this.dept.getHostFields().size()];
+                
+                for (int i = 0; i < this.dept.getHostFields().size(); i++){
+                    hosts[i] = Integer.parseInt(this.dept.getHostFields().get(i).getText());
+                }
+                
+                
+                VLSM vlsm = new VLSM(ip, hosts, deptNeeded);
+                vlsm.calculate();
+                String[] vlsmColumnNames = {"# of Hosts", "Network", "Range", "Broadcast Address"};
+                vlsmTable = new JTable(Utils.convertToTableData(vlsm.getVlsmList(), vlsm.getNumOfHosts()), vlsmColumnNames);
+                output.loadTable(vlsmTable);
             }else{
                 System.out.println("failvlsm");
-            }
-        }
-        
-        if (e.getSource() == submitVLSM){
-            int deptsNeeded = Integer.parseInt(numOfDept.getText());
-            IPAddress ip = new IPAddress(ipadd, subnet);
-            int hosts[] = new int[hostFields.size()];
-            
-            for (int i = 0; i < hostFields.size(); i++){
-                hosts[i] = Integer.parseInt(hostFields.get(i).getText());
-            }
-           
-            
-            VLSM vlsm = new VLSM(ip, hosts, deptsNeeded);
-            vlsm.calculate();
-            vlsm.print();
-            
-            String[] vlsmColumnNames = {"# of Hosts", "Network", "Range", "Broadcast Address"};
-            vlsmTable = new JTable(Utils.convertToTableData(vlsm.getVlsmList(), vlsm.getNumOfHosts()), vlsmColumnNames);
-            output.loadTable(vlsmTable);
-            
-        }else{
-            System.out.println("failvlsm2");
+            }        
         }
         
     }
 
-    private void generateDepartmentPanel(int num) {
-        deptPanel.removeAll(); // Clear previous rows
-        hostFields.clear();
-        
-        for (int i = 0; i < num; i++) {
-            JLabel label = new JLabel("Hosts for Department " + (i + 1) + ": ");
-            label.setFont(new Font("Monospaced", Font.PLAIN, 15));
-
-            JTextField hosts = new JTextField();
-            hosts.setPreferredSize(new Dimension(200, 30));
-            hosts.setFont(new Font("Monospaced", Font.PLAIN, 15));
-            ((AbstractDocument) hosts.getDocument()).setDocumentFilter(new DigitFilter());
-            this.hostFields.add(hosts);
-            
-            JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            row.setBackground(Color.LIGHT_GRAY);
-            row.add(label);
-            row.add(hosts);
-            
-            deptPanel.add(row);
-        }
-
-        submitVLSM.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        submitVLSM.setPreferredSize(new Dimension(100, 40));
-        for (ActionListener al : submitVLSM.getActionListeners()) {
-            submitVLSM.removeActionListener(al);
-        }
-        submitVLSM.addActionListener(this);
-
-        
-        deptPanel.add(this.submitVLSM);
-        deptPanel.revalidate();
-        deptPanel.repaint();
-    }
+ 
 
     
 

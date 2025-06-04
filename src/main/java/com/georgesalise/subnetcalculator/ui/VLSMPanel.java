@@ -4,6 +4,7 @@
  */
 package com.georgesalise.subnetcalculator.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
@@ -17,11 +18,14 @@ public class VLSMPanel extends JPanel{
     public VLSMPanel(){
         this.setBackground(Color.green);
         this.setPreferredSize(new Dimension(100,100));
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        //this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new BorderLayout());
+        
         OutputSubPanel output = new OutputSubPanel();
         
-        AddressSubPanel addr = new AddressSubPanel(output);
+        DepartmentSubPanel dept = new DepartmentSubPanel();
+        
+        AddressSubPanel addr = new AddressSubPanel(output, dept);
         
         
         //
@@ -29,8 +33,8 @@ public class VLSMPanel extends JPanel{
         
         
         
-        this.add(addr);
-        //this.add(dept);
-        this.add(output);
+        this.add(addr, BorderLayout.NORTH);
+        this.add(dept, BorderLayout.WEST);
+        this.add(output, BorderLayout.CENTER);
     }
 }
