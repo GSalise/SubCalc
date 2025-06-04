@@ -53,12 +53,9 @@ public class IPResult{
     @Override
     public String toString() {
         return String.format("Subnetwork: %s/%d    Start: %s   End: %s     Broadcast: %s", 
-                this.subnetwork, this.prefix, this.startAddress, 
-                this.endAddress, this.broadcastAddress);
+            this.subnetwork, this.prefix, this.startAddress, 
+            this.endAddress, this.broadcastAddress);
     }
-    
-    
-    
-    
+
     
 }

@@ -17,8 +17,7 @@ public class CIDR {
     private int newPrefix;
     private int requestedSubnets;
     private int increment;
-    ArrayList<String> cidrList = new ArrayList<String>();
-    ArrayList<IPResult> cidrList2 = new ArrayList<IPResult>();
+    ArrayList<IPResult> resultsList = new ArrayList<IPResult>();
     
     public CIDR(){
     
@@ -61,7 +60,7 @@ public class CIDR {
 
         // Limit to 1024
         for(int i = 0; i < this.totalSubnets && i < 1024; i++){
-            this.cidrList2.add(new IPResult(base, this.newPrefix));
+            this.resultsList.add(new IPResult(base, this.newPrefix));
             //this.cidrList.add(Utils.intToStringIP(base));
             base +=  (int)Math.pow(2, 32 - this.newPrefix);
 
@@ -84,12 +83,12 @@ public class CIDR {
     public void print(){
         for(int i = 0; i < this.totalSubnets && i < 1024; i++){
 //            System.out.println("Subnet " + i + ": " + this.cidrList.get(i) + "/" + this.newPrefix + "\n");
-            System.out.println("Subnet " + i + ": " + this.cidrList2.get(i) + "/" + this.newPrefix + "\n");
+            System.out.println("Subnet " + i + ": " + this.resultsList.get(i) + "/" + this.newPrefix + "\n");
         }
     }
 
-    public ArrayList<IPResult> getCidrList2() {
-        return cidrList2;
+    public ArrayList<IPResult> getresultsList() {
+        return resultsList;
     }
 
 }

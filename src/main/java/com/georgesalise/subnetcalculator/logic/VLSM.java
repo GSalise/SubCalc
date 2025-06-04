@@ -5,7 +5,9 @@
 package com.georgesalise.subnetcalculator.logic;
 
 import com.georgesalise.subnetcalculator.model.IPAddress;
+import com.georgesalise.subnetcalculator.model.IPResult;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -17,7 +19,7 @@ public class VLSM {
     private int numOfDepartments;
     private int mask;
     private int increment;
-    ArrayList<String> vlsmList = new ArrayList<String>();
+    ArrayList<IPResult> vlsmList = new ArrayList<IPResult>();
     
     public VLSM(){
         
@@ -27,11 +29,12 @@ public class VLSM {
         this.ipadd = ipaddr;
         this.numOfHosts = hosts;
         this.numOfDepartments = departments;
+        this.sort();
     }
     
     public void findMaskAndIncrement(int numHost){
         int i = 0;
-        while (Math.pow(2, i) < numHost){
+        while (Math.pow(2, i) < numHost + 2){
             i++;
         }
         
@@ -42,18 +45,19 @@ public class VLSM {
     
     public void calculate(){
         int base = ipadd.getIpAddress();
-        for(int i = 0; i < this.numOfDepartments; i++){
+        for(int i = 0 ; i < this.numOfDepartments ; i++){
+            System.out.println(" Hosts:  " + this.numOfHosts[i] + "\n");
             this.findMaskAndIncrement(this.numOfHosts[i]);
-            this.vlsmList.add(Utils.intToStringIP(base));
+            this.vlsmList.add(new IPResult(base, this.mask));
             base +=  (int)Math.pow(2, 32 - this.mask);
         }
 
     }
     
     public void print(){
-        for(int i = 0; i < this.numOfDepartments; i++){
+        for(int i = 0 ; i < this.numOfDepartments ; i++){
             this.findMaskAndIncrement(this.numOfHosts[i]);
-            System.out.println("Subnet: " + this.vlsmList.get(i) + "/" + this.mask + "\n");
+            System.out.println("Subnet: " + this.vlsmList.get(i) + "/" + this.mask + " Hosts:  " + this.numOfHosts[i] + "\n");
         }
     }
 
@@ -63,6 +67,25 @@ public class VLSM {
 
     public int getMask() {
         return mask;
+    }
+
+    public ArrayList<IPResult> getVlsmList() {
+        return vlsmList;
+    }
+
+    public int[] getNumOfHosts() {
+        return numOfHosts;
+    }
+    
+    private void sort(){
+        Arrays.sort(this.numOfHosts);
+
+        // Reverse the array manually
+        for (int i = 0; i < this.numOfDepartments / 2; i++) {
+            int temp = this.numOfHosts[i];
+            this.numOfHosts[i] = this.numOfHosts[this.numOfDepartments - 1 - i];
+            this.numOfHosts[this.numOfDepartments - 1 - i] = temp;
+        }
     }
     
 

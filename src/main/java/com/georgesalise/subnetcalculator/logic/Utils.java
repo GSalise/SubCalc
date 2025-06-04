@@ -67,5 +67,19 @@ public class Utils {
         
         return tableData;
     }
+    
+    public static Object[][] convertToTableData(ArrayList<IPResult> arrayResult, int[] hosts){
+        Object[][] tableData = new Object[arrayResult.size()][4];
+
+        for (int i = 0; i < arrayResult.size(); i++) {
+            IPResult result = arrayResult.get(i);
+            tableData[i][0] = hosts[i];
+            tableData[i][1] = result.getSubnetwork() + "/" + result.getPrefix();
+            tableData[i][2] = result.getStartAddress() + " - " + result.getEndAddress();
+            tableData[i][3] = result.getBroadcastAddress();
+        }
+        
+        return tableData;
+    }
 
 }

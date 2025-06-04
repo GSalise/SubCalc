@@ -40,7 +40,7 @@ public class MainFrame extends JFrame{
         // layout
         this.add(topbar, BorderLayout.NORTH);
         this.add(modePanel, BorderLayout.CENTER);
-        modes.show(modePanel, "CIDR");  // default mode
+        modes.show(modePanel, "VLSM");  // default mode
 
         // show resize size
 //        this.addComponentListener(new ComponentAdapter() {
