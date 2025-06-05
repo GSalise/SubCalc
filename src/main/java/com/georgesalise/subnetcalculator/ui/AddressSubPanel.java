@@ -4,6 +4,8 @@
  */
 package com.georgesalise.subnetcalculator.ui;
 
+import com.georgesalise.subnetcalculator.customExceptions.AddressOverflowException;
+import com.georgesalise.subnetcalculator.customExceptions.DepartmentLimitException;
 import com.georgesalise.subnetcalculator.logic.CIDR;
 import com.georgesalise.subnetcalculator.logic.Utils;
 import static com.georgesalise.subnetcalculator.logic.Utils.toIntegerArray;
@@ -16,6 +18,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -43,7 +48,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     private int[] masks = {1,2,3,4,5,6,7,8,9,10,
                            11,12,13,14,15,16,17,18,19,20,
                            21,22,23,24,25,26,27,28,29,30};
-    private JTextField address = new JTextField();
+    private JTextField address = new JTextField("x.x.x.x");
     private JComboBox<Integer> mask = new JComboBox<>(toIntegerArray(masks));
     private JTextField numOfSubnets = new JTextField();
     private JLabel addressLabel = new JLabel("Address: ");
@@ -63,7 +68,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     private JTable vlsmTable = new JTable();
 
 
-    
+    // CIDR AddressSubPanel
     public AddressSubPanel (OutputSubPanel output, VisualizerSubPanel visual){
         this.output = output;
         this.visual = visual;
@@ -76,6 +81,24 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         address.setPreferredSize(new Dimension(200,40));
         address.setFont(new Font("Monospaced", Font.PLAIN, 15));
         
+        // placeholder
+        address.setForeground(Color.GRAY);
+        address.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (address.getText().equals("x.x.x.x")) {
+                    address.setText("");
+                    address.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (address.getText().isEmpty()) {
+                    address.setForeground(Color.GRAY);
+                    address.setText("x.x.x.x");
+                }
+            }
+            });
         
         // subnet mask
         maskLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -117,6 +140,25 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         addressLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
         address.setPreferredSize(new Dimension(200,40));
         address.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        
+        // placeholder
+        address.setForeground(Color.GRAY);
+        address.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (address.getText().equals("x.x.x.x")) {
+                    address.setText("");
+                    address.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (address.getText().isEmpty()) {
+                    address.setForeground(Color.GRAY);
+                    address.setText("x.x.x.x");
+                }
+            }
+            });
         
         
         // subnet mask
@@ -184,43 +226,127 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         // CIDR BUTTON HANDLER
         if (e.getSource() == submitCIDR){
-            
-            
             if (matcher.matches()){
-                // Logic
-                int subnetworksNeeded = Integer.parseInt(numOfSubnets.getText());
-                IPAddress ip = new IPAddress(ipadd, subnet);
-                CIDR cidr = new CIDR(ip, subnetworksNeeded);
-                
-                // Visual
-                String[] cidrColumnNames = {"Subnetwork", "Start Address", "End Address", "Broadcast Address"};
-                cidrTable = new JTable(Utils.convertToTableData(cidr.getresultsList()), cidrColumnNames);
-                visual.loadVisual(cidr.getNewPrefix());
-                output.loadTable(cidrTable);
+                try {
+                    // Logic
+                    int subnetworksNeeded = Integer.parseInt(numOfSubnets.getText());
+                    IPAddress ip = new IPAddress(ipadd, subnet);
+                    CIDR cidr = new CIDR(ip, subnetworksNeeded);
+                    // Visual
+                    String[] cidrColumnNames = {"Subnetwork", "Start Address", "End Address", "Broadcast Address"};
+                    cidrTable = new JTable(Utils.convertToTableData(cidr.getresultsList()), cidrColumnNames);
+                    visual.loadVisual(cidr.getNewPrefix());
+                    output.loadTable(cidrTable);
+                } catch(NumberFormatException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Missing Fields Detected!
+                                                        
+                                                        Please fill out all of the missing fields!""",
+                        "Missing Fields",
+                        JOptionPane.WARNING_MESSAGE);
+                } catch(AddressOverflowException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Address Overflow Detected!
+                                                        
+                                                        The combination of the starting IP address and the number of required subnets
+                                                        exceeds the available IPv4 address space.
+                                                        
+                                                        Please choose a different base address or reduce the number of requested subnets.""",
+                        "Overflow Error",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+
+                } catch(Exception error) {
+                    System.err.println("An error occurred while processing CIDR logic:");
+                    error.printStackTrace(); // This prints the full stack trace to console
+                    JOptionPane.showMessageDialog(this, """
+                                                        Something Went Wrong!
+                                                        
+                                                        Please contact the developer to resolve it!
+                                                        
+                                                        Error: """ + error.getMessage(),
+                        "Unknown Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }else{
-                System.out.println("failcidr");
+                JOptionPane.showMessageDialog(this, """
+                                                    Invalid IP Address Detected!
+                                                    
+                                                    Please enter a valid IPv4 address in the format:
+                                                    
+                                                    x.x.x.x (e.g., 192.168.1.1)""",
+                    "Invalid IP Address Detected",
+                    JOptionPane.WARNING_MESSAGE);
             }
 
             
         }
-        // HOST GENERATE HANDLER
+        // HOST GENERATION HANDLER
         if (e.getSource() == generateHosts){
-            if(matcher.matches()){
-                System.out.println("hey");
-                int deptNeeded = Integer.parseInt(numOfDept.getText());
-                IPAddress ip = new IPAddress(ipadd, subnet);
-                this.dept.generateDeptInputs(deptNeeded);
-                
-                for (ActionListener al : submitVLSM.getActionListeners()) {
-                    submitVLSM.removeActionListener(al);
+            if(matcher.matches()){     
+                try { 
+                    
+                    if (Integer.parseInt(numOfDept.getText()) > 100){
+                        throw new DepartmentLimitException("Deparment exceeds predefined limit of 100");
+                    }
+                    int deptNeeded = Integer.parseInt(numOfDept.getText());
+                    IPAddress ip = new IPAddress(ipadd, subnet);
+                    this.dept.generateDeptInputs(deptNeeded);
+                    
+                    // prevent duplicate listeners 
+                    for (ActionListener al : submitVLSM.getActionListeners()) {
+                        submitVLSM.removeActionListener(al);
+                    }
+                    
+                    // Add the sumbit button
+                    submitVLSM.addActionListener(this);
+                    this.add(submitVLSM);     
+                    
+                } catch(NumberFormatException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Missing Fields Detected!
+                                                        
+                                                        Please fill out all of the missing fields!""",
+                        "Missing Fields",
+                        JOptionPane.WARNING_MESSAGE);
+                    
+                } catch(DepartmentLimitException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Department Limit Exceeded!
+                                                        
+                                                        Department limit of 100 has been exceeded! A maximum of a 100 departments 
+                                                        is only allowed! 
+                                                        
+                                                        Please enter a smaller number and try again.""",
+                        "Department Limit Exceeded",
+                        JOptionPane.WARNING_MESSAGE);
+                    
+                }  catch (Exception error){
+                    System.err.println("An error occurred while processing CIDR logic:");
+                    error.printStackTrace(); // This prints the full stack trace to console
+                    JOptionPane.showMessageDialog(this, """
+                                                        Something Went Wrong!
+                                                        
+                                                        Please contact the developer to resolve it!
+                                                        
+                                                        Error: """ + error.getMessage(),
+                        "Unknown Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
-                
-                
-                submitVLSM.addActionListener(this);
-                this.add(submitVLSM);
+
             }else{
-                System.out.println("failgenerate");
-            }       
+                JOptionPane.showMessageDialog(this, """
+                                                    Invalid IP Address Detected!
+                                                    
+                                                    Please enter a valid IPv4 address in the format:
+                                                    
+                                                    x.x.x.x (e.g., 192.168.1.1)""",
+                    "Invalid IP Address Detected",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+                  
         }
         
         // VLSM BUTTON HANDLER

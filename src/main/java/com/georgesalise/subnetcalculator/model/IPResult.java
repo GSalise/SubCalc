@@ -22,11 +22,11 @@ public class IPResult{
         
     }
     
-    public IPResult(int IP, int prefix){
-        this.subnetwork = Utils.intToStringIP(IP);
-        this.startAddress = Utils.intToStringIP(IP + 1);
-        this.endAddress = Utils.intToStringIP( (IP + (int)Math.pow(2, 32 - prefix)) - 2 );
-        this.broadcastAddress = Utils.intToStringIP( (IP + (int)Math.pow(2, 32 - prefix)) - 1 );
+    public IPResult(long IP, int prefix){
+        this.subnetwork = Utils.longToStringIP(IP);
+        this.startAddress = Utils.longToStringIP(IP + 1);
+        this.endAddress = Utils.longToStringIP( (IP + (int)Math.pow(2, 32 - prefix)) - 2 );
+        this.broadcastAddress = Utils.longToStringIP( (IP + (int)Math.pow(2, 32 - prefix)) - 1 );
         this.prefix = prefix;
     }
 

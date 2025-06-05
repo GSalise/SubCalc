@@ -29,7 +29,7 @@ public class Utils {
         }
     }
     
-    public static String intToStringIP(int base){
+    public static String longToStringIP(long base){
         String stringIP =   ((base >> 24) & 0xFF) + "." +
                             ((base >> 16) & 0xFF) + "." +
                             ((base >> 8) & 0xFF) + "." +

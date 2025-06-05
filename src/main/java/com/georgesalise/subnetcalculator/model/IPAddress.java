@@ -9,7 +9,7 @@ package com.georgesalise.subnetcalculator.model;
  * @author gian
  */
 public class IPAddress {
-    private int ipAddress;
+    private long ipAddress;
     private int prefix;
     
     public IPAddress(){
@@ -26,10 +26,10 @@ public class IPAddress {
         // Split the string into octets, split them by .
         String[] octets = ipaddr.split("\\.");
         
-        ipAddress = (Integer.parseInt(octets[0]) << 24) |
-                    (Integer.parseInt(octets[1]) << 16) |
-                    (Integer.parseInt(octets[2]) << 8)  |
-                    (Integer.parseInt(octets[3]));
+        ipAddress = ((long) Integer.parseInt(octets[0]) << 24) |
+                    ((long) Integer.parseInt(octets[1]) << 16) |
+                    ((long) Integer.parseInt(octets[2]) << 8)  |
+                    ((long) Integer.parseInt(octets[3]));
         /*
         Sample IP = 192.168.10.0
             
@@ -61,11 +61,11 @@ public class IPAddress {
         
     }
 
-    public int getIpAddress() {
+    public long getIpAddress() {
         return ipAddress;
     }
 
-    public void setIpAddress(int ipAddress) {
+    public void setIpAddress(long ipAddress) {
         this.ipAddress = ipAddress;
     }
     
@@ -73,10 +73,10 @@ public class IPAddress {
         this.prefix = prefix;
         String[] octets = ipaddr.split("\\.");
         
-        ipAddress = (Integer.parseInt(octets[0]) << 24) |
-                    (Integer.parseInt(octets[1]) << 16) |
-                    (Integer.parseInt(octets[2]) << 8)  |
-                    (Integer.parseInt(octets[3]));
+        ipAddress = ((long) Integer.parseInt(octets[0]) << 24) |
+                    ((long) Integer.parseInt(octets[1]) << 16) |
+                    ((long) Integer.parseInt(octets[2]) << 8)  |
+                    ((long) Integer.parseInt(octets[3]));
     }
 
     public int getPrefix() {

@@ -4,6 +4,7 @@
  */
 package com.georgesalise.subnetcalculator.logic;
 
+import com.georgesalise.subnetcalculator.customExceptions.DepartmentLimitException;
 import com.georgesalise.subnetcalculator.model.IPAddress;
 import com.georgesalise.subnetcalculator.model.IPResult;
 import java.util.ArrayList;
@@ -44,12 +45,12 @@ public class VLSM {
     }
     
     public void calculate(){
-        int base = ipadd.getIpAddress();
+        long base = ipadd.getIpAddress();
         for(int i = 0 ; i < this.numOfDepartments ; i++){
             System.out.println(" Hosts:  " + this.numOfHosts[i] + "\n");
             this.findMaskAndIncrement(this.numOfHosts[i]);
             this.vlsmList.add(new IPResult(base, this.mask));
-            base +=  (int)Math.pow(2, 32 - this.mask);
+            base +=  (long)Math.pow(2, 32 - this.mask);
         }
 
     }

@@ -1,4 +1,6 @@
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/SubnetCalculator.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/customExceptions/AddressOverflowException.java
+/home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/customExceptions/DepartmentLimitException.java
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/logic/CIDR.java
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/logic/Utils.java
 /home/gian/NetBeansProjects/SubnetCalculator/src/main/java/com/georgesalise/subnetcalculator/logic/VLSM.java

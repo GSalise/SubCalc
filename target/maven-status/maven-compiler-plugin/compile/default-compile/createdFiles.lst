@@ -8,9 +8,13 @@ com/georgesalise/subnetcalculator/ui/CIDRPanel.class
 com/georgesalise/subnetcalculator/ui/VisualizerSubPanel$1.class
 com/georgesalise/subnetcalculator/ui/DepartmentSubPanel.class
 com/georgesalise/subnetcalculator/logic/VLSM.class
+com/georgesalise/subnetcalculator/ui/AddressSubPanel$1.class
 com/georgesalise/subnetcalculator/logic/CIDR.class
+com/georgesalise/subnetcalculator/ui/AddressSubPanel$2.class
 com/georgesalise/subnetcalculator/SubnetCalculator.class
 com/georgesalise/subnetcalculator/ui/VLSMPanel.class
+com/georgesalise/subnetcalculator/customExceptions/DepartmentLimitException.class
 com/georgesalise/subnetcalculator/ui/VisualizerSubPanel.class
 com/georgesalise/subnetcalculator/model/IPAddress.class
 com/georgesalise/subnetcalculator/ui/MainFrame.class
+com/georgesalise/subnetcalculator/customExceptions/AddressOverflowException.class

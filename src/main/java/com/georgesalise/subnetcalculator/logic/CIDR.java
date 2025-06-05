@@ -4,6 +4,7 @@
  */
 package com.georgesalise.subnetcalculator.logic;
 
+import com.georgesalise.subnetcalculator.customExceptions.AddressOverflowException;
 import com.georgesalise.subnetcalculator.model.IPAddress;
 import com.georgesalise.subnetcalculator.model.IPResult;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class CIDR {
     
     }
     
-    public CIDR(IPAddress ipadd, int requestS){
+    public CIDR(IPAddress ipadd, int requestS) throws AddressOverflowException{
         this.requestedSubnets = requestS;
         calculateRequirements(ipadd);
         this.increment = Utils.calculateIncrement(newPrefix);
@@ -55,15 +56,19 @@ public class CIDR {
         this.newPrefix = ipadd.getPrefix() + i;
     }
 
-    public void calculate(IPAddress ipadd){
-        int base = ipadd.getIpAddress();
+    public void calculate(IPAddress ipadd) throws AddressOverflowException{
+        long base = ipadd.getIpAddress();
 
         // Limit to 1024
         for(int i = 0; i < this.totalSubnets && i < 1024; i++){
+            if(base > 0xFFFFFFFFL){
+                throw new AddressOverflowException("Overflow detected! Halting calculation.");
+            }
             this.resultsList.add(new IPResult(base, this.newPrefix));
+            System.out.println(base + " == " + Utils.longToStringIP(base));
             //this.cidrList.add(Utils.intToStringIP(base));
-            base +=  (int)Math.pow(2, 32 - this.newPrefix);
-
+            base +=  (long)Math.pow(2, 32 - this.newPrefix);
+ 
         }
     }
     
@@ -73,9 +78,9 @@ public class CIDR {
         this.increment = Utils.calculateIncrement(newPrefix);
         
         int a = nth * this.increment;
-        int base = ipadd.getIpAddress();
+        long base = ipadd.getIpAddress();
         base +=  a;
-        System.out.println(Utils.intToStringIP(base) + "\n\n");
+        System.out.println(Utils.longToStringIP(base) + "\n\n");
         
         
     }
