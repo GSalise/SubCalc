@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
@@ -80,6 +83,22 @@ public class Utils {
         }
         
         return tableData;
+    }
+    
+    public static class DigitFilter extends DocumentFilter {
+        @Override
+        public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string.matches("\\d+")) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text.matches("\\d+")) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
     }
 
 }

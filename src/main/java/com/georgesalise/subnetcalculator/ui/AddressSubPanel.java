@@ -109,7 +109,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         numOfSubnetsLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
         numOfSubnets.setPreferredSize(new Dimension(150,40));
         numOfSubnets.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        ((AbstractDocument) numOfSubnets.getDocument()).setDocumentFilter(new DigitFilter());
+        ((AbstractDocument) numOfSubnets.getDocument()).setDocumentFilter(new Utils.DigitFilter());
         
         // submit
         submitCIDR.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -170,7 +170,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         numOfDeptLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
         numOfDept.setPreferredSize(new Dimension(150,40));
         numOfDept.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        ((AbstractDocument) numOfDept.getDocument()).setDocumentFilter(new DigitFilter());
+        ((AbstractDocument) numOfDept.getDocument()).setDocumentFilter(new Utils.DigitFilter());
         
         
         // generate host
@@ -195,21 +195,21 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         this.add(generateHosts);
     }
 
-    private static class DigitFilter extends DocumentFilter {
-        @Override
-        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-            if (string.matches("\\d+")) {
-                super.insertString(fb, offset, string, attr);
-            }
-        }
-
-        @Override
-        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-            if (text.matches("\\d+")) {
-                super.replace(fb, offset, length, text, attrs);
-            }
-        }
-    }
+//    private static class DigitFilter extends DocumentFilter {
+//        @Override
+//        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+//            if (string.matches("\\d+")) {
+//                super.insertString(fb, offset, string, attr);
+//            }
+//        }
+//
+//        @Override
+//        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+//            if (text.matches("\\d+")) {
+//                super.replace(fb, offset, length, text, attrs);
+//            }
+//        }
+//    }
 
 
     @Override
@@ -229,9 +229,8 @@ public class AddressSubPanel extends JPanel implements ActionListener{
             if (matcher.matches()){
                 try {
                     // Logic
-                    int subnetworksNeeded = Integer.parseInt(numOfSubnets.getText());
-                    IPAddress ip = new IPAddress(ipadd, subnet);
-                    CIDR cidr = new CIDR(ip, subnetworksNeeded);
+                    CIDR cidr = new CIDR(new IPAddress(ipadd, subnet), Integer.parseInt(numOfSubnets.getText()));
+                    
                     // Visual
                     String[] cidrColumnNames = {"Subnetwork", "Start Address", "End Address", "Broadcast Address"};
                     cidrTable = new JTable(Utils.convertToTableData(cidr.getresultsList()), cidrColumnNames);
@@ -286,20 +285,26 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         if (e.getSource() == generateHosts){
             if(matcher.matches()){     
                 try { 
-                    
                     if (Integer.parseInt(numOfDept.getText()) > 100){
-                        throw new DepartmentLimitException("Deparment exceeds predefined limit of 100");
+                        throw new DepartmentLimitException("exceeds_100");
                     }
-                    int deptNeeded = Integer.parseInt(numOfDept.getText());
-                    IPAddress ip = new IPAddress(ipadd, subnet);
-                    this.dept.generateDeptInputs(deptNeeded);
+                    
+                    if (Integer.parseInt(numOfDept.getText()) <= 0){
+                        throw new DepartmentLimitException("zero_or_less");
+                    }
+                    this.dept.generateDeptInputs(Integer.parseInt(numOfDept.getText()));
                     
                     // prevent duplicate listeners 
                     for (ActionListener al : submitVLSM.getActionListeners()) {
                         submitVLSM.removeActionListener(al);
                     }
                     
-                    // Add the sumbit button
+                    // locking the fields to prevent any changes until the submit button is clicked
+                    this.numOfDept.setEnabled(false);
+                    this.address.setEnabled(false);
+                    this.mask.setEnabled(false);
+                    
+                    // add the sumbit button
                     submitVLSM.addActionListener(this);
                     this.add(submitVLSM);     
                     
@@ -312,6 +317,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                         JOptionPane.WARNING_MESSAGE);
                     
                 } catch(DepartmentLimitException error){
+                    if("exceeds_100".equals(error.getMessage())){
                     JOptionPane.showMessageDialog(this, """
                                                         Department Limit Exceeded!
                                                         
@@ -320,7 +326,19 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                                                         
                                                         Please enter a smaller number and try again.""",
                         "Department Limit Exceeded",
-                        JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.WARNING_MESSAGE); 
+                    }
+                    
+                    if("zero_or_less".equals(error.getMessage())){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Invalid Number of Departments!
+                                                        
+                                                        The number of departments must at least be one (1). 
+                                                        
+                                                        Please try again with a valid positive number.""",
+                        "Invalid Number of Departments",
+                        JOptionPane.WARNING_MESSAGE); 
+                    }
                     
                 }  catch (Exception error){
                     System.err.println("An error occurred while processing CIDR logic:");
@@ -352,23 +370,59 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         // VLSM BUTTON HANDLER
         if (e.getSource() == submitVLSM){
             if(matcher.matches()){
-                int deptNeeded = Integer.parseInt(numOfDept.getText());
-                IPAddress ip = new IPAddress(ipadd, subnet);
                 
-                int[] hosts = new int[this.dept.getHostFields().size()];
-                
-                for (int i = 0; i < this.dept.getHostFields().size(); i++){
-                    hosts[i] = Integer.parseInt(this.dept.getHostFields().get(i).getText());
+                try {        
+                    int[] hosts = new int[this.dept.getHostFields().size()];
+                    for (int i = 0; i < this.dept.getHostFields().size(); i++){
+                        hosts[i] = Integer.parseInt(this.dept.getHostFields().get(i).getText());
+                    }
+
+
+                    VLSM vlsm = new VLSM(new IPAddress(ipadd, subnet), hosts, Integer.parseInt(numOfDept.getText()));
+                    vlsm.calculate();
+                    String[] vlsmColumnNames = {"# of Hosts", "Network", "Range", "Broadcast Address"};
+                    vlsmTable = new JTable(Utils.convertToTableData(vlsm.getVlsmList(), vlsm.getNumOfHosts()), vlsmColumnNames);
+                    output.loadTable(vlsmTable);
+                    
+                    // unlocking the fields and reseting them
+                    this.numOfDept.setEnabled(true);
+                    this.numOfDept.setText("0");
+                    this.address.setEnabled(true);
+                    this.address.setText("");
+                    this.mask.setEnabled(true);
+                    this.mask.setSelectedIndex(0);
+                    
+                } catch(NumberFormatException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Missing Fields Detected!
+                                                        
+                                                        Please fill out all of the missing fields!""",
+                        "Missing Fields",
+                        JOptionPane.WARNING_MESSAGE);
+                    
+                } catch (Exception error){
+                    System.err.println("An error occurred while processing CIDR logic:");
+                    error.printStackTrace(); // This prints the full stack trace to console
+                    JOptionPane.showMessageDialog(this, """
+                                                        Something Went Wrong!
+                                                        
+                                                        Please contact the developer to resolve it!
+                                                        
+                                                        Error: """ + error.getMessage(),
+                        "Unknown Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
-                
-                
-                VLSM vlsm = new VLSM(ip, hosts, deptNeeded);
-                vlsm.calculate();
-                String[] vlsmColumnNames = {"# of Hosts", "Network", "Range", "Broadcast Address"};
-                vlsmTable = new JTable(Utils.convertToTableData(vlsm.getVlsmList(), vlsm.getNumOfHosts()), vlsmColumnNames);
-                output.loadTable(vlsmTable);
+
             }else{
-                System.out.println("failvlsm");
+                JOptionPane.showMessageDialog(this, """
+                                                    Invalid IP Address Detected!
+                                                    
+                                                    Please enter a valid IPv4 address in the format:
+                                                    
+                                                    x.x.x.x (e.g., 192.168.1.1)""",
+                    "Invalid IP Address Detected",
+                    JOptionPane.WARNING_MESSAGE);
             }        
         }
         

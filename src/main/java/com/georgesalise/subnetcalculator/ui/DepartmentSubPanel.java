@@ -4,6 +4,7 @@
  */
 package com.georgesalise.subnetcalculator.ui;
 
+import com.georgesalise.subnetcalculator.logic.Utils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AbstractDocument;
 
 /**
  *
@@ -68,6 +70,7 @@ public class DepartmentSubPanel extends JPanel {
             JTextField host = new JTextField();
             host.setMaximumSize(new Dimension(200, 30)); 
             host.setFont(new Font("Monospaced", Font.PLAIN, 15));
+            ((AbstractDocument) host.getDocument()).setDocumentFilter(new Utils.DigitFilter());
             this.hostFields.add(host);
 
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5)); 
