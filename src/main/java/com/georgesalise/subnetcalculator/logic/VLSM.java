@@ -4,6 +4,7 @@
  */
 package com.georgesalise.subnetcalculator.logic;
 
+import com.georgesalise.subnetcalculator.customExceptions.AddressOverflowException;
 import com.georgesalise.subnetcalculator.customExceptions.DepartmentLimitException;
 import com.georgesalise.subnetcalculator.model.IPAddress;
 import com.georgesalise.subnetcalculator.model.IPResult;
@@ -26,11 +27,16 @@ public class VLSM {
         
     }
     
-    public VLSM(IPAddress ipaddr, int[] hosts, int departments){
+    public VLSM(IPAddress ipaddr, int[] hosts, int departments) throws AddressOverflowException{
         this.ipadd = ipaddr;
         this.numOfHosts = hosts;
         this.numOfDepartments = departments;
         this.sort();
+        
+        if (this.checkAvailability()){
+            throw new AddressOverflowException("Amount of hosts requested is too many");
+        }
+        
     }
     
     public void findMaskAndIncrement(int numHost){
@@ -88,6 +94,20 @@ public class VLSM {
             this.numOfHosts[this.numOfDepartments - 1 - i] = temp;
         }
     }
+    
+    public boolean checkAvailability(){
+        int totalHosts = 0;
+        
+        for (int i = 0; i < this.numOfDepartments; i++) {
+            totalHosts += this.numOfHosts[i];
+        }
+        
+        
+        
+        return (totalHosts >= ( (long)Math.pow(2, 32 - this.ipadd.getPrefix())) - 2);
+        
+    } 
+    
     
 
 }

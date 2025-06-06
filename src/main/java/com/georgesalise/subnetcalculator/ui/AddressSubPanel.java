@@ -66,13 +66,14 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     private JButton submitVLSM = new JButton("Submit");
     private DepartmentSubPanel dept;
     private JTable vlsmTable = new JTable();
+    private JButton reset = new JButton("Reset");
 
 
     // CIDR AddressSubPanel
     public AddressSubPanel (OutputSubPanel output, VisualizerSubPanel visual){
         this.output = output;
         this.visual = visual;
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(new Color(244, 244, 242));
         this.setLayout(new FlowLayout(FlowLayout.CENTER));
         //this.setBorder(new EmptyBorder(20, 0, 0 ,0));
         
@@ -132,13 +133,13 @@ public class AddressSubPanel extends JPanel implements ActionListener{
     public AddressSubPanel (OutputSubPanel output, DepartmentSubPanel dept){
         this.output = output;
         this.dept = dept;
-        this.setBackground(Color.LIGHT_GRAY);
+        this.setBackground(new Color(244, 244, 242));
         this.setLayout(new FlowLayout(FlowLayout.CENTER));
         //this.setBorder(new EmptyBorder(20, 0, 0 ,0));
         
         // address
         addressLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        address.setPreferredSize(new Dimension(200,40));
+        address.setPreferredSize(new Dimension(140,40));
         address.setFont(new Font("Monospaced", Font.PLAIN, 15));
         
         // placeholder
@@ -168,7 +169,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         // number of subnets needed
         numOfDeptLabel.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        numOfDept.setPreferredSize(new Dimension(150,40));
+        numOfDept.setPreferredSize(new Dimension(100,40));
         numOfDept.setFont(new Font("Monospaced", Font.PLAIN, 15));
         ((AbstractDocument) numOfDept.getDocument()).setDocumentFilter(new Utils.DigitFilter());
         
@@ -180,8 +181,10 @@ public class AddressSubPanel extends JPanel implements ActionListener{
         
         // sumbit
         submitVLSM.setFont(new Font("Monospaced", Font.PLAIN, 15));
-        submitVLSM.setPreferredSize(new Dimension(120, 40));
+        submitVLSM.setPreferredSize(new Dimension(100, 40));
         
+        reset.setFont(new Font("Monospaced", Font.PLAIN, 15));
+        reset.setPreferredSize(new Dimension(100, 40));
         
         this.add(addressLabel);
         this.add(address);
@@ -234,8 +237,9 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                     // Visual
                     String[] cidrColumnNames = {"Subnetwork", "Start Address", "End Address", "Broadcast Address"};
                     cidrTable = new JTable(Utils.convertToTableData(cidr.getresultsList()), cidrColumnNames);
-                    visual.loadVisual(cidr.getNewPrefix());
+                    visual.loadVisual(cidr.getNewPrefix(), subnet);
                     output.loadTable(cidrTable);
+                    
                 } catch(NumberFormatException error){
                     JOptionPane.showMessageDialog(this, """
                                                         Missing Fields Detected!
@@ -243,6 +247,7 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                                                         Please fill out all of the missing fields!""",
                         "Missing Fields",
                         JOptionPane.WARNING_MESSAGE);
+                    
                 } catch(AddressOverflowException error){
                     JOptionPane.showMessageDialog(this, """
                                                         Address Overflow Detected!
@@ -298,6 +303,9 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                     for (ActionListener al : submitVLSM.getActionListeners()) {
                         submitVLSM.removeActionListener(al);
                     }
+                    for (ActionListener al : reset.getActionListeners()) {
+                        reset.removeActionListener(al);
+                    }
                     
                     // locking the fields to prevent any changes until the submit button is clicked
                     this.numOfDept.setEnabled(false);
@@ -307,6 +315,10 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                     // add the sumbit button
                     submitVLSM.addActionListener(this);
                     this.add(submitVLSM);     
+                    
+                    reset.addActionListener(this);
+                    this.add(reset);   
+                    
                     
                 } catch(NumberFormatException error){
                     JOptionPane.showMessageDialog(this, """
@@ -400,8 +412,20 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                         "Missing Fields",
                         JOptionPane.WARNING_MESSAGE);
                     
+                } catch(AddressOverflowException error){
+                    JOptionPane.showMessageDialog(this, """
+                                                        Address Overflow Detected!
+                                                        
+                                                        The requested number of hosts exceeds the capacity of the address able to
+                                                        be provided by your subnet mask.
+                                                        
+                                                        Please choose a different base address or reduce the number of requested subnets.""",
+                        "Overflow Error",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+
                 } catch (Exception error){
-                    System.err.println("An error occurred while processing CIDR logic:");
+                    System.err.println("An error occurred while processing VLSM logic:");
                     error.printStackTrace(); // This prints the full stack trace to console
                     JOptionPane.showMessageDialog(this, """
                                                         Something Went Wrong!
@@ -424,6 +448,36 @@ public class AddressSubPanel extends JPanel implements ActionListener{
                     "Invalid IP Address Detected",
                     JOptionPane.WARNING_MESSAGE);
             }        
+        }
+        
+        // RESET BUTTON HANDLER
+        // Purpose: To prevent the user from being locked out
+        if (e.getSource() == reset){
+            try{  
+                // unlocking the fields and reseting them
+                this.numOfDept.setEnabled(true);
+                this.numOfDept.setText("0");
+                this.address.setEnabled(true);
+                this.address.setText("");
+                this.mask.setEnabled(true);
+                this.mask.setSelectedIndex(0);
+                
+                this.dept.removeHostGeneration();
+                this.remove(this.submitVLSM);
+                this.remove(this.reset);
+            } catch (Exception error){
+                    System.err.println("An error occurred while processing RESET logic:");
+                    error.printStackTrace(); // This prints the full stack trace to console
+                    JOptionPane.showMessageDialog(this, """
+                                                        Something Went Wrong!
+                                                        
+                                                        Please contact the developer to resolve it!
+                                                        
+                                                        Error: """ + error.getMessage(),
+                        "Unknown Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
         }
         
     }

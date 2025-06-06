@@ -65,7 +65,7 @@ public class CIDR {
                 throw new AddressOverflowException("Overflow detected! Halting calculation.");
             }
             this.resultsList.add(new IPResult(base, this.newPrefix));
-            System.out.println(base + " == " + Utils.longToStringIP(base));
+            // System.out.println(base + " == " + Utils.longToStringIP(base));
             //this.cidrList.add(Utils.intToStringIP(base));
             base +=  (long)Math.pow(2, 32 - this.newPrefix);
  

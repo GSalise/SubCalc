@@ -25,12 +25,12 @@ public class OutputSubPanel extends JPanel {
     private JLabel title = new JLabel("Results");
     
     public OutputSubPanel(){
-        this.setBackground(Color.ORANGE);
+        this.setBackground(Color.white);
         this.setLayout(new BorderLayout());
         
         title.setFont(new Font("Monospaced", Font.PLAIN, 20));
         title.setHorizontalAlignment(JLabel.CENTER);
-        title.setBorder(new EmptyBorder(15, 0, 0, 0));
+        title.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         
         

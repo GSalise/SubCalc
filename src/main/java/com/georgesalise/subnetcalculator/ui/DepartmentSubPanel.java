@@ -41,7 +41,7 @@ public class DepartmentSubPanel extends JPanel {
         
         // Set vertical layout
         deptInputs.setLayout(new BoxLayout(deptInputs, BoxLayout.Y_AXIS));
-        deptInputs.setBackground(Color.CYAN);
+        deptInputs.setBackground(new Color(187, 191, 202));
 
         // Scroll pane wraps deptInputs
         scroll = new JScrollPane(deptInputs);
@@ -49,19 +49,18 @@ public class DepartmentSubPanel extends JPanel {
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setMaximumSize(new Dimension(400, 300)); // Adjust as needed
         
- 
         this.add(scroll, BorderLayout.CENTER);
         this.setVisible(true);
     }
 
     public void generateDeptInputs(int num) {
         deptInputs.removeAll();
-        
+        deptInputs.add(Box.createVerticalStrut(5));
         JLabel title = new JLabel("Hosts");
         title.setFont(new Font("Monospaced", Font.PLAIN, 15));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         deptInputs.add(title);
-        
+        deptInputs.add(Box.createVerticalStrut(5));
         
         for (int i = 0; i < num; i++) {
             JLabel label = new JLabel("Hosts for Department " + (i + 1) + ": ");
@@ -76,7 +75,7 @@ public class DepartmentSubPanel extends JPanel {
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5)); 
             row.setAlignmentX(Component.CENTER_ALIGNMENT);
             row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); 
-            row.setBackground(Color.LIGHT_GRAY);
+            row.setBackground(new Color(187, 191, 202));
             row.add(label);
             row.add(host);
 
@@ -84,8 +83,14 @@ public class DepartmentSubPanel extends JPanel {
             deptInputs.add(Box.createVerticalStrut(5));
         }
 
-  //      deptInputs.add(Box.createVerticalGlue()); 
-
+        deptInputs.revalidate();
+        deptInputs.repaint();
+        this.revalidate();
+        this.repaint();
+    }
+    
+    public void removeHostGeneration(){
+        deptInputs.removeAll();
         deptInputs.revalidate();
         deptInputs.repaint();
         this.revalidate();

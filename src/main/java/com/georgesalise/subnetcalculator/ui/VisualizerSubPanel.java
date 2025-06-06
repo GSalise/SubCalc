@@ -42,7 +42,7 @@ public class VisualizerSubPanel extends JPanel{
     private JLabel title = new JLabel("Visualization of the Subnet");
     
     public VisualizerSubPanel(){
-        this.setBackground(Color.cyan);
+        this.setBackground(new Color(187, 191, 202));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         title.setFont(new Font("Monospaced", Font.PLAIN, 20));
@@ -74,15 +74,20 @@ public class VisualizerSubPanel extends JPanel{
         this.add(bits);
     }
     
-    public void loadVisual(int upTo){
+    public void loadVisual(int upTo, int initial){
+        System.out.println(initial);
         JTable newBits = new JTable(bitsData, bitsColumn){
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 java.awt.Component c = super.prepareRenderer(renderer, row, column);
                 if(!isCellSelected(row, column)){
-                    if(column < upTo){
-                        c.setBackground(Color.green);
-                    }else{
+                    if(column < initial){
+                        c.setBackground(new Color(187, 191, 202));
+                    
+                    } else if(column < upTo){
+                        c.setBackground(Color.orange);
+                    }
+                    else{
                         c.setBackground(Color.WHITE);
                     }
                 }
