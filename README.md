@@ -1,5 +1,3 @@
-This is my first time creating something and actually releasing it on Github, so bugs are to be expected. But personally, I think it should work fine for now.
-
 **What is this: A subnet calculator**
 
 ### Functionalities:
@@ -7,7 +5,9 @@ This is my first time creating something and actually releasing it on Github, so
 - CIDR calculation
 - VLSM calculation
 
-**Java version required: 23 or higher**
+**Java version required: 20+**
+
+### Check out the releases
 
 ### How to run:
 java -jar SubnetCalculator-1.0-SNAPSHOT-jar-with-dependencies.jar 
